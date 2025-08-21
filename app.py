@@ -2,7 +2,7 @@ import streamlit as st
 import json
 from datetime import datetime
 from db_connect import fetchrows
-from stock_utils import get_yahoo_finance_link
+from stock_utils import get_stock_price
 
 st.set_page_config(page_title="VC News Sentiment", layout="wide")
 
@@ -45,7 +45,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("📊 VC News Sentiment & Stock Correlation")
+st.title("📊 News Sentiment & Stock Correlation")
 
 rows = fetchrows()
 
@@ -66,6 +66,29 @@ all_entities = sorted(list(set(all_entities)))
 selected_entity = st.sidebar.selectbox("Select Company", ["All"] + all_entities)
 selected_emotion = st.sidebar.selectbox("Select Emotion", ["All", "Positive", "Negative", "Neutral", "Joy", "Sadness", "Fear", "Anger", "Surprise"])
 date_range = st.sidebar.date_input("Select Date Range", [])
+
+st.sidebar.header("Live Stock Prices")
+famous_companies = {
+    "Apple": "AAPL",
+    "Microsoft": "MSFT",
+    "Tesla": "TSLA",
+    "Amazon": "AMZN",
+    "Google (Alphabet)": "GOOGL",
+    "Meta (Facebook)": "META",
+    "Netflix": "NFLX",
+    "NVIDIA": "NVDA"
+}
+for name , ticker in famous_companies.items():
+    price , change , trend = get_stock_price(ticker)
+    if price:
+        if trend == "up":
+            st.sidebar.markdown(f"**{name} ({ticker})**: <span style='color:green;'>${price} 📈 (+{change})</span>", unsafe_allow_html=True)
+        elif trend == "down":
+            st.sidebar.markdown(f"**{name} ({ticker})**: <span style='color:red;'>${price} 📉 ({change})</span>", unsafe_allow_html=True)
+        else:
+            st.sidebar.markdown(f"**{name} ({ticker})**: ${price} ➖ (0.00)")
+    else:
+        st.sidebar.write(f"**{name} ({ticker})**: N/A")
 
 for row in rows:
     _, dt, headline, summary, emotion, entities, url, source = row
@@ -126,7 +149,4 @@ for row in rows:
 
         if orgs:
             st.write("**Entities:**", ", ".join(orgs))
-            for org in orgs:
-                link = get_yahoo_finance_link(org)
-                if link:
-                    st.markdown(f"🔗 [View {org} on Yahoo Finance]({link})")
+        
