@@ -1,26 +1,27 @@
 import requests
+import os
+import numpy as np
+from dotenv import load_dotenv
 
-def get_ticker(company_name: str):
-    """
-    Fetch ticker symbol from Yahoo Finance search API using company name.
-    """
-    url = f"https://query2.finance.yahoo.com/v1/finance/search?q={company_name}"
+load_dotenv()
+
+FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY")
+
+def get_stock_price(ticker : str):
+    url = f"https://finnhub.io/api/v1/quote?symbol={ticker}&token={FINNHUB_API_KEY}"
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url)
         data = response.json()
-        if "quotes" in data and len(data["quotes"]) > 0:
-            return data["quotes"][0]["symbol"]  # First match ticker
+
+        current = data.get("c")
+        previous = data.get("pc")
+        if current is None or previous is None:
+            return None  , None , None
+        change = np.round(current - previous , 2)
+        up_down = "up" if change > 0 else ("down" if change < 0 else "neutral")
+
+        return current , change , up_down
     except Exception as e:
-        print(f"Error fetching ticker for {company_name}: {e}")
-        return None
-    return None
-
-
-def get_yahoo_finance_link(company_name: str):
-    """
-    Returns Yahoo Finance link for the company if ticker is found.
-    """
-    ticker = get_ticker(company_name)
-    if ticker:
-        return f"https://finance.yahoo.com/quote/{ticker}"
-    return None
+        print("Errror fetching price : ")
+        return None , None , None
+print(FINNHUB_API_KEY)
