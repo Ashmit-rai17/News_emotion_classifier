@@ -5,3 +5,4 @@ numpy>=1.26.0
 torch==2.0.1+cpu
 transformers==4.42.4
 python-dotenv>=1.0.1
+sqlite3-binary
