@@ -1,8 +1,17 @@
-pip>=25.0
+# Web Interface
 streamlit>=1.29.0
+
+# HTTP Requests
 requests>=2.31.0
-numpy>=1.26.0
-torch==2.0.1+cpu
+
+# Data Processing
+numpy>=1.24.0,<1.27.0
+
+# PyTorch (CPU version)
+torch==2.0.1
+
+# Transformers for NLP
 transformers==4.42.4
+
+# Environment Variables
 python-dotenv>=1.0.1
-sqlite3-binary
