@@ -34,8 +34,10 @@ In today's information-saturated world, **thousands of news headlines** flood th
 
 ## 📸 Demo & Screenshots
 
-![Demo Screenshot](screenshots/demo.png)
-*Real-time emotion classification of live news headlines*
+<img width="1883" height="991" alt="image" src="https://github.com/user-attachments/assets/19c1e0a6-0e50-4dfa-b921-82ecc2f86c5a" />
+<img width="1917" height="954" alt="image" src="https://github.com/user-attachments/assets/e86483f7-01fe-4d7f-9359-e9cfacd34507" />
+
+
 
 ![Results Visualization](screenshots/emotion_distribution.png)
 *Emotion distribution analysis across different news sources*
@@ -55,10 +57,10 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Run the classifier
-python src/main.py
+python src/nlp2.py
 
 # For web interface (if implemented)
-python app.py
+streamlit run app.py
 ```
 
 ## Architecture
